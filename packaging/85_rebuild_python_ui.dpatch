@@ -1,0 +1,33 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 85_rebuild_python_ui.dpatch by  <till.kamppeter@gmail.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' hplip-3.11.1~/Makefile.am hplip-3.11.1/Makefile.am
+--- hplip-3.11.1~/Makefile.am	2011-01-19 06:18:26.000000000 +0100
++++ hplip-3.11.1/Makefile.am	2011-01-23 23:50:17.895291308 +0100
+@@ -4,6 +4,10 @@
+ #  (c) 2004-2010 Copyright Hewlett-Packard Development Company, LP
+ #  Author: David Suffield, Naga Samrat Chowdary Narla,
+ 
++# Generic rules
++%.py: %.ui
++	$(PYUIC4) -x -o $@ $<
++
+ INCLUDES = -Iip -Iio/hpmud -Iscan/sane -Iprnt/hpijs
+ 
+ hplipdir = $(datadir)/hplip
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' hplip-3.11.1~/configure.in hplip-3.11.1/configure.in
+--- hplip-3.11.1~/configure.in	2011-01-19 06:19:05.000000000 +0100
++++ hplip-3.11.1/configure.in	2011-01-23 23:51:08.845262676 +0100
+@@ -508,6 +508,8 @@
+    AC_MSG_RESULT("using $PYTHONINCLUDEDIR")
+    AC_ARG_VAR(PYTHONINCLUDEDIR, [path to Python.h C header file])
+    AC_CHECK_HEADERS(python$PYTHON_VERSION/Python.h, ,[AC_MSG_ERROR([cannot find python-devel support], 6)])
++   AC_ARG_VAR([PYUIC4], [PyQT pyuic4 .ui to .py compiler command])
++   AC_CHECK_TOOLS([PYUIC4], [pyuic4])
+ fi
+ 
+ if test "$hpijs_only_build" = "no" && test "$scan_build" = "yes" && test "$hpcups_only_build" = "no"; then
