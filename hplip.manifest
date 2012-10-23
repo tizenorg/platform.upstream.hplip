@@ -1,9 +1,5 @@
 <manifest>
 	<request>
-		<domain name="cups"/>
+		<domain name="_"/>
 	</request>
-	<assign>
-		<filesystem path="/usr/lib/cups/filter/hpcups" label="cups" />
-		<filesystem path="/usr/lib/cups/filter/hpcups" exec_label="cups" />
-	</assign>
 </manifest>
