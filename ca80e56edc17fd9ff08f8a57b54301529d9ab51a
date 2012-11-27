@@ -1,0 +1,9 @@
+Change-Id: Ica80e56edc17fd9ff08f8a57b54301529d9ab51a
+Verified+1: Ryan Ware <ryan.r.ware@intel.com>
+Code-Review+2: Tracy Graydon <tracy.graydon@intel.com>
+Verified+1: Tracy Graydon <tracy.graydon@intel.com>
+Submitted-by: Tracy Graydon <tracy.graydon@intel.com>
+Submitted-at: Wed, 28 Nov 2012 05:58:29 +0900
+Reviewed-on: http://review.tizen.org/gerrit/2247
+Project: external/hplip
+Branch: refs/heads/master
