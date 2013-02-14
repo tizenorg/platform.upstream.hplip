@@ -1,0 +1,11 @@
+--- prnt/hpcups/HPCupsFilter.cpp.orig	2012-10-30 16:05:54.096118488 +0900
++++ prnt/hpcups/HPCupsFilter.cpp	2012-10-30 16:08:33.800115451 +0900
+@@ -846,7 +846,7 @@
+     FILE    *fp;
+     char    str[258];
+     char    *p;
+-    fp = fopen ("/etc/cups/cupsd.conf", "r");
++    fp = fopen ("/opt/etc/cups/cupsd.conf", "r");
+     if (fp == NULL)
+         return;
+     while (!feof (fp))

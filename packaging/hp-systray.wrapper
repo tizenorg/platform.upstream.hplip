@@ -1,0 +1,17 @@
+#! /bin/bash
+
+# Be polite and sleep a bit to let more important processes go ahead
+# (in particular after booting let the cupsd finish its startup):
+sleep 10
+# Run hp-systray only if an appropriate local print queue exists
+# (i.e. on localhost a queue with a "hp:/..." DeviceURI)
+# see https://bugzilla.novell.com/show_bug.cgi?id=649280
+# otherwise and in case of any error do an unnoticeable exit:
+set -o pipefail
+lpstat -h localhost -v | grep -q ': hp:/' || exit 0
+# Replace this wrapper with the actual command
+# so that it exits with the exit code of the command
+# and that the command gets any signals directly,
+# see https://bugzilla.novell.com/show_bug.cgi?id=499735
+exec hp-systray
+
