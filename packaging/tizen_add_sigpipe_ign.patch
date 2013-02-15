@@ -1,0 +1,11 @@
+--- prnt/hpcups/HPCupsFilter.cpp.orig	2012-09-18 13:38:56.754794644 +0900
++++ prnt/hpcups/HPCupsFilter.cpp	2012-09-17 14:10:09.481765002 +0900
+@@ -521,7 +521,7 @@
+  */
+
+     signal(SIGTERM, HPCancelJob);
+-
++	signal(SIGPIPE, SIG_IGN);
+
+     cups_raster = cupsRasterOpen(fd, CUPS_RASTER_READ);
+

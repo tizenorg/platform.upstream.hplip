@@ -1,0 +1,11 @@
+--- prnt/hpcups/HPCupsFilter.cpp.orig	2012-10-30 16:05:54.096118488 +0900
++++ prnt/hpcups/HPCupsFilter.cpp	2012-10-30 16:08:33.800115451 +0900
+@@ -328,7 +328,7 @@
+     m_JA.media_attributes.printable_height = cups_header->cupsHeight;
+ 
+     m_JA.media_attributes.printable_start_x = (cups_header->Margins[0] * horz_res) / 72;
+-    m_JA.media_attributes.printable_start_y = ((cups_header->PageSize[1] - cups_header->ImagingBoundingBox[3]) * vert_res) / 72;
++    m_JA.media_attributes.printable_start_y = ( cups_header->Margins[1] * vert_res) / 72;
+ 
+     m_JA.media_attributes.horizontal_overspray = (xoverspray * horz_res) / 1000;
+     m_JA.media_attributes.vertical_overspray   = (yoverspray * vert_res) / 1000;
