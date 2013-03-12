@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=hp-toolbox
+GenericName=HP Device Manager
+Exec=hp-toolbox
+Icon=HPmenu

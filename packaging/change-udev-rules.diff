@@ -1,0 +1,294 @@
+--- data/rules/55-hpmud.rules.orig	2011-12-09 12:19:54.000000000 +0100
++++ data/rules/55-hpmud.rules	2012-01-12 16:20:57.000000000 +0100
+@@ -12,142 +12,186 @@
+ #   3. This rules file is an attempt at being compatable with all distros. Feel free to make your own changes and if you feel your
+ #      changes are not distro specific please send your patch to us. 2/11/2009, D Suffield
+ #
++# SUSE changed:
++#
++# ATTRS{idVendor} to ATTR{idVendor} and
++# ATTRS{idProduct to ATTR{idProduct}
++# because ATTRS search all parents which wastes resources
++# while ATTR is sufficient here,
++# see https://bugzilla.novell.com/show_bug.cgi?id=436085
++#
++# MODE="660" to MODE="0664"
++# because it is sufficiently secure to let any user read the device nodes
++# because HPLIP opens the device nodes exclusively so that sniffing
++# of print jobs or scanner image data should not be possible and
++# read permissions for any user is required in particular for USB devices
++# so that any user can see the USB devices when he runs the command "lsusb".
++#
++# Added ENV{sane_hpaio}="yes" to all entries for USB devices
++# to get the SANE driver "hpaio" automatically activated in any case
++# (only scanners in HP parallel port all-in-one devices are ignored)
++# because not only "AiO products (0x03f0xx11)" can have scanner units
++# but also Photosmart products, inkjet printers, and laser printers
++# (e.g. the LaserJet 1220 03f0:0417 has a scanner unit).
++# An activated SANE driver does not cause continuous system load because
++# it is only run when the user launches a scanning frontend (e.g. xsane)
++# and then all what the driver does is to scan the USB device information
++# to find devices which belong to the driver and if nothing found it exits.
++# Additionally see https://bugzilla.novell.com/show_bug.cgi?id=469721#c9
++#
++# Added ENV{libsane_matched}="yes" to all entries for USB devices
++# to get normal user access permissions via udev, see
++# https://bugzilla.novell.com/show_bug.cgi?id=542473#c14
++#
++# Added same rule to disable USB autosuspend
++# as in /etc/udev/rules.d/55-libsane.rules
++#
+ 
+ ACTION!="add", GOTO="hpmud_rules_end"
+-SUBSYSTEM=="ppdev", OWNER="root", GROUP="lp", MODE="0660"
++SUBSYSTEM=="ppdev", OWNER="root", GROUP="lp", MODE="0664"
+ SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", GOTO="hplip_pid_test"
+ SUBSYSTEM!="usb_device", GOTO="hpmud_rules_end"
+ 
+ LABEL="hplip_pid_test"
+ 
+ # Check for AiO products (0x03f0xx11).
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="??11", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="??11", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ 
+ # Check for Photosmart products without wildcard since cameras and scanners also used (0x03f0xx02). 
+ # The xx02 pid has been retired so this explicit list should not change.
+ # photosmart_d2300_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="c302", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="c302", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_100
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3802", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3802", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_1115
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3402", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3402", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_1215
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3202", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3202", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_1218
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3302", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3302", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_130
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3902", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3902", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_1315
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3602", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3602", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_140_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1002", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1002", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_230
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3502", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3502", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_240_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1102", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1102", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_320_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1202", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1202", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_330_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1602", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1602", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_370_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1302", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1302", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_380_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1702", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1702", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_420_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1502", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1502", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_470_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1802", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1802", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_7150
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3a02", OWNER="root", GROUP="lp", MODE="660"
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3b02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3a02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3b02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_7200_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="b002", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="b002", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_7345
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="2002", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="2002", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_7350 
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3c02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3c02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_7400_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="b802", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="b802", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_7550
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="3e02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="3e02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_7600_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="b202", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="b202", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_7700_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="b402", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="b402", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_7800_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="c002", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="c002", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_7900_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="b602", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="b602", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_8000_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="c102", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="c102", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_8100_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="ba02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="ba02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_8200_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="c202", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="c202", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_8400_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="bb02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="bb02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_8700_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="bc02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="bc02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a310_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1d02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1d02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a320_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1e02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1e02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a430_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1902", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1902", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a440_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1f02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1f02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a510_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1a02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1a02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a520_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="2602", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="2602", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a530_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="2b02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="2b02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a610_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1b02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1b02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a620_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="2702", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="2702", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a630_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="2c02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="2c02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a710_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="1c02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="1c02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_a820_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="2902", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="2902", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_d5060_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="c802", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="c802", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_d5100_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="c402", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="c402", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_d6100_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="c502", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="c502", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_d7100_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="c602", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="c602", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_d7300_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="c702", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="c702", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_pro_b8300_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="be02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="be02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_b8800_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="d002", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="d002", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # photosmart_pro_b9100_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="bd02", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="bd02", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # Photosmart_B8500_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="d102", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="d102", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # Photosmart_A640_series
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="7902", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="7902", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ 
+ # Check for Business Inkjet products (0x03f0xx12).
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="??12", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="??12", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # Check for Deskjet products (0x03f0xx04).
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="??04", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="??04", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # Check for LaserJet products (0x03f0xx17).
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="??17", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="??17", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # Check for LaserJet products (0x03f0xx2a).
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="??2a", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="??2a", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ # Check for DesignJet product (0x03f0xx14).
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="??14", OWNER="root", GROUP="lp", MODE="660"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="??14", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes"
+ 
+ # Removed the following rule because FHS states that /etc should be reserved for static files only. This
+ # functionality should be done in a deb/rpm post install script.  2/11/2009, D Suffield
+ #
++# SUSE re-enabled it
++# because it is how it works with SANE regardless what FHS think how it should work.
++# Files in /etc/ are config files which can be adapted as needed during runtime.
++# Adapting /etc/sane.d/dll.conf only during package install time is insufficient
++# because a device may be not connected by the admin during package install time
++# but later during runtime by the system's end-user (e.g. on a company workstation).
++#
+ # If sane-bankends is installed add hpaio backend support to dll.conf if needed.
+-# ENV{sane_hpaio}=="yes", RUN+="/bin/sh -c 'grep -q ^#hpaio /etc/sane.d/dll.conf;if [ $$? -eq 0 ];then sed -i -e s/^#hpaio/hpaio/ /etc/sane.d/dll.conf;else grep -q ^hpaio /etc/sane.d/dll.conf;if [ $$? -ne 0 ];then echo hpaio >>/etc/sane.d/dll.conf;fi;fi'"
++ENV{sane_hpaio}=="yes", RUN+="/bin/sh -c 'grep -q ^#hpaio /etc/sane.d/dll.conf;if [ $$? -eq 0 ];then sed -i -e s/^#hpaio/hpaio/ /etc/sane.d/dll.conf;else grep -q ^hpaio /etc/sane.d/dll.conf;if [ $$? -ne 0 ];then echo hpaio >>/etc/sane.d/dll.conf;fi;fi'"
++
++# The following rule will disable USB autosuspend for the device
++ENV{libsane_matched}=="yes", RUN+="/bin/sh -c 'test -e /sys/$env{DEVPATH}/power/level && echo on > /sys/$env{DEVPATH}/power/level'"
+ 
+ LABEL="hpmud_rules_end"
+--- data/rules/56-hpmud_support.rules.orig	2011-12-09 12:19:54.000000000 +0100
++++ data/rules/56-hpmud_support.rules	2012-01-12 16:24:00.000000000 +0100
+@@ -1,15 +1,16 @@
+ # HPLIP udev rules file. Notify console user if plugin support is required for this device.
+ 
+-ACTION!="add", GOTO="hpmud_rules_end"
+-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", GOTO="pid_test"
+-SUBSYSTEM!="usb_device", GOTO="hpmud_rules_end"
+-
+-LABEL="pid_test"
++ACTION!="add", GOTO="hpmud_support_rules_end"
++SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", GOTO="hpmud_support_pid_test"
++SUBSYSTEM!="usb_device", GOTO="hpmud_support_rules_end"
++ 
++LABEL="hpmud_support_pid_test"
+ 
+ # Check for LaserJet products (0x03f0xx17).
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="??17", ENV{hp_model}="$attrs{product}", ENV{hp_test}="yes"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="??17", ENV{hp_model}="$attrs{product}", ENV{hp_test}="yes"
+ # Check for LaserJet products (0x03f0xx2a).
+-ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="??2a", ENV{hp_model}="$attrs{product}", ENV{hp_test}="yes"
++ATTR{idVendor}=="03f0", ATTR{idProduct}=="??2a", ENV{hp_model}="$attrs{product}", ENV{hp_test}="yes"
+ ENV{hp_test}=="yes", RUN+="/bin/sh -c '/usr/bin/hp-mkuri -c &'"
+ 
+-LABEL="hpmud_rules_end"
++LABEL="hpmud_support_rules_end"
++
+--- data/rules/86-hpmud_plugin.rules.orig	2011-12-09 12:19:54.000000000 +0100
++++ data/rules/86-hpmud_plugin.rules	2012-01-12 17:07:28.000000000 +0100
+@@ -1,9 +1,9 @@
+ # Load hp firmware for this printer.
+ 
+-ACTION!="add", GOTO="hpmud_rules_end"
++ACTION!="add", GOTO="hpmud_plugin_rules_end"
+ 
+ # hp_Marvel_Device (These printer requires the plugin files. installling when device is detected)
+-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="??17", PROGRAM="/bin/sh -c 'logger -p user.info loading hp_printer_device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c '/usr/bin/hp-check-plugin -m &'"
+-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="03f0", ATTRS{idProduct}=="??2a", PROGRAM="/bin/sh -c 'logger -p user.info loading hp_printer_device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c '/usr/bin/hp-check-plugin -m &'"
++SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="03f0", ATTR{idProduct}=="??17", PROGRAM="/bin/sh -c 'logger -p user.info loading hp_printer_device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c '/usr/bin/hp-check-plugin -m &'"
++SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="03f0", ATTR{idProduct}=="??2a", PROGRAM="/bin/sh -c 'logger -p user.info loading hp_printer_device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c '/usr/bin/hp-check-plugin -m &'"
+ 
+-LABEL="hpmud_rules_end"
++LABEL="hpmud_plugin_rules_end"
