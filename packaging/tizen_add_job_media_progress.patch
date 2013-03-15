@@ -1,0 +1,15 @@
+diff -urN hplip.orig/prnt/hpcups/HPCupsFilter.cpp hplip/prnt/hpcups/HPCupsFilter.cpp
+--- hplip.orig/prnt/hpcups/HPCupsFilter.cpp	2013-01-10 19:55:26.010990577 +0900
++++ hplip/prnt/hpcups/HPCupsFilter.cpp	2013-01-10 19:54:58.118990579 +0900
+@@ -700,6 +700,11 @@
+             }
+             WriteBMPRaster (cfp, color_raster, cups_header.cupsWidth, COLOR_RASTER);
+             WriteBMPRaster (kfp, black_raster, cups_header.cupsWidth/8, BLACK_RASTER);
++
++			if ((y & 127) == 0)
++			{
++				fprintf(stderr, "ATTR: job-media-progress=%d\n", 100 * y / cups_header.cupsHeight);
++			}
+         }
+         m_Job.NewPage();
+         if (err != NO_ERROR) {

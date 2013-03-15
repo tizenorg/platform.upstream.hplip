@@ -1,3 +1,11 @@
+hplip (3.12.4-13) unstable; urgency=low
+
+  * Fixed to report job media progress
+  * Git: external/hplip
+  * Tag: hplip_3.12.4-13
+
+ -- GangHeok Kim <gangheok.kim@samsung.com>  Thu, 10 Jan 2013 19:58:21 +0900
+
 hplip (3.12.4-12slp2) unstable; urgency=low
 
   * Fixed not to build deprecated PPD API

@@ -1,5 +1,5 @@
 <manifest>
 	<request>
-		<domain name="cups"/>
+		<domain name="mobileprint"/>
 	</request>
 </manifest>

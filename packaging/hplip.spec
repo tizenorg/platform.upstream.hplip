@@ -25,7 +25,7 @@ Group:          Hardware/Printing
 # x.y.m : x = major release number, y = year (eg: 6 = 2006), m = month (eg: 6a = second release in June)
 # Official releases have a 3 digit number and release candidates have a 4 digit number: x.y.m.rc
 Version:        3.12.4
-Release:        12
+Release:        13
 Url:            http://hplipopensource.com
 # Source0...Source9 is for sources from HP:
 # URL for Source0: http://prdownloads.sourceforge.net/hplip/hplip-3.12.4.tar.gz
@@ -117,6 +117,7 @@ Patch103:		tizen_disable_dbus_hpcups.patch
 Patch104:		tizen_add_sigpipe_ign.patch
 Patch105:		tizen_fix_image_align.patch
 Patch106:		tizen_fix_debug_log.patch
+Patch107:		tizen_add_job_media_progress.patch
 
 #PreReq:         coreutils
 #PreReq:         /bin/grep
@@ -332,6 +333,7 @@ http://hplipopensource.com
 %patch104
 %patch105
 %patch106
+%patch107 -p1
 
 %build
 # If AUTOMAKE='automake --foreign' is not set, autoreconf (in fact automake)
