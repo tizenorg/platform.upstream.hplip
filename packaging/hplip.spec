@@ -48,7 +48,7 @@ BuildRequires:  cups-devel
 #BuildRequires:  hicolor-icon-theme
 #BuildRequires:  libdrm-devel
 #BuildRequires:  libgphoto2-devel
-BuildRequires:  pkgconfig(turbojpeg)
+BuildRequires:  libjpeg-devel
 #BuildRequires:  libqt4-devel
 BuildRequires:  libtool
 BuildRequires:  pkgconfig(libusb)
