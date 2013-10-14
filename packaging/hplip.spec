@@ -48,7 +48,7 @@ BuildRequires:  cups-devel
 #BuildRequires:  hicolor-icon-theme
 #BuildRequires:  libdrm-devel
 #BuildRequires:  libgphoto2-devel
-BuildRequires:  pkgconfig(turbojpeg)
+BuildRequires:  libjpeg-devel
 #BuildRequires:  libqt4-devel
 BuildRequires:  libtool
 BuildRequires:  pkgconfig(libusb)
@@ -209,108 +209,6 @@ licenses. For more information, see:
 http://hplipopensource.com
 
 /usr/share/doc/packages/hplip/index.html
-
-
-#%package hpijs
-#Summary:        Only plain printing with HPLIP printer drivers
-#Group:          Hardware/Printing
-# Since Nov 14 2007 ghostscript-library does no longer require /usr/bin/hpijs
-# but only "Suggests hplip-hpijs" (see Novell/Suse Bugzilla bnc#341564).
-# Have the matching "reverse suggests" = "Enhances" here
-# to document the ghostscript <-> hplip-hpijs relationship:
-#Enhances:       ghostscript
-# On a minimalist system only hplip-hpijs may be installed
-# or on a minimalist package repository (e.g. on the openSUSE CDs)
-# only hplip-hpijs may be available (even when a usual system is installed).
-# When only hplip-hpijs is there, it should tell the dependency resolver
-# that for usual functionality, hplip should be installed too (if possible).
-# Unfortunately the installer ignores suggested packages silently
-# but on the other hand I cannot use "Recommends hplip" here
-# because the installer installs recommended packages silently
-# which would bloat a minimal selection (when hplip is available to be installed)
-# because the minimal selection contains hplip-hpijs which recommends hplip
-# so that the installer installs hplip and all what this requires silently
-# see https://bugzilla.novell.com/show_bug.cgi?id=546893
-# Require only the matching version of the hplip main-package
-# (compare the "Requires: hplip-hpijs" entry above) but do not depend
-# on the exact matching release because the exact matching release
-# may be not available to be installed (e.g. when hplip-hpijs-1.2.3-4.5 is
-# installed from the openSUSE CDs but on our official online repository
-# only hplip-1.2.3-6.7 is available which should usually also work):
-#Suggests:       %{name} = %{version}
-# hpijs-standalone was a stand-alone minimalist package
-# which is no longer provided since a long time.
-# hplip-hpijs and hpijs-standalone both contain /usr/bin/hpijs
-# so that both packages have a RPM conflict which should
-# be solved by a silent replacement of the old hpijs-standalone.
-# This Obsoletes is intentionally unversioned because
-# hplip-hpijs should replace any version of hpijs-standalone.
-#Obsoletes:      hpijs-standalone
-# Either the hplip17 packages or the hplip packages can be installed,
-# see https://bugzilla.novell.com/show_bug.cgi?id=251830#c20
-# for the full story why there is this unversioned Obsoletes:
-#Obsoletes:      hplip17-hpijs
-# Obsolete the hplip3 copy that was introduced for older SLED11-GA HP preloads:
-#Provides:       hplip3-hpijs = 3.9.5
-#Obsoletes:      hplip3-hpijs < 3.9.5
-# PackMan provides HPLIP in the packages hplip and hplip-hpcups.
-# HPLIP does not work if the openSUSE packages hplip and hplip-hpijs
-# are installed together with a leftover PackMan package hplip-hpcups
-# see https://bugzilla.novell.com/show_bug.cgi?id=515005#c17
-# This Obsoletes is intentionally unversioned because
-# the openSUSE package hplip-hpijs must replace
-# any version of PackMan's hplip-hpcups package.
-#Obsoletes:      hplip-hpcups
-
-#%description hpijs
-#HPIJS is HPLIP's Ghostscript printer driver for HP printers.
-#HPCUPS is HPLIP's native CUPS printer driver for HP printers.
-
-#This sub-package includes only what is needed for plain printing
-#with the printer drivers in HPLIP for standard HP printers.
-
-#It does neither provide device status information,
-#nor support for scanning, nor support for faxing,
-#nor support for memory card (mass storage) access,
-#nor support for non-standard devices e.g. no support
-#for devices which require an additional plugin from HP.
-
-#This sub-package includes in particular:
-
-#The hpijs binary and the libraries libhpip and libhpmud
-#which are needed to run it.
-
-#The HPCUPS driver (/usr/lib[64]/cups/filter/hpcups).
-
-#The CUPS backend "hp".
-
-#All HPLIP PPD files (also for HP PostScript printers).
-
-#For the full-featured HPLIP printing and scanning solution,
-#the main-package package hplip must be installed.
-
-#For full documentation and license see the main-package hplip.
-
-
-#%package sane
-#Summary:        Only plain scanning with HPLIP scan drivers
-#Group:          Hardware/Scanner
-# Require the exact matching version-release of the hpijs sub-package to make sure
-# to have the exact matching version of libhpip and libhpmud installed.
-# A wrong library version may let libsane-hpaio crash (e.g. segfault)
-# which lets the whole scanning stack frontend<->libsane-dll<->libsane-backend crash
-# also for any other backend when the hpaio backend is enabled (e.g. "scanimage -L"):
-#Requires:       %{name}-hpijs = %{version}-%{release}
-# See comment in hpijs sub-package for same Suggests:
-#Suggests:       %{name} = %{version}
-# Automatically install this package if hpijs sub-package and sane-backends are
-# both installed:
-#Supplements:    packageand(%{name}-hpijs:sane-backends)
-#Enhances:       sane-backends
-
-#%description sane
-#This sub-package includes only what is needed for plain scanning
-#with the scan drivers in HPLIP for standard HP all-in-one printers.
 
 %prep
 # Be quiet when unpacking:
