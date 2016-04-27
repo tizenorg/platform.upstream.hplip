@@ -407,8 +407,8 @@ DRIVER_ERROR HPCupsFilter::startPage (cups_page_header2_t *cups_header)
         }
     }
 
-	string strPrinterURI="" ,strPrinterName= "";
-	m_DBusComm.initDBusComm(DBUS_PATH,DBUS_INTERFACE, getenv("DEVICE_URI"), m_JA.printer_name);
+    string strPrinterURI="" ,strPrinterName= "";
+    m_DBusComm.initDBusComm(DBUS_PATH,DBUS_INTERFACE, getenv("DEVICE_URI"), m_JA.printer_name);
 
     ptr = strstr(m_argv[5], "job-uuid");
     if (ptr) {
@@ -429,7 +429,7 @@ DRIVER_ERROR HPCupsFilter::startPage (cups_page_header2_t *cups_header)
         {
             fputs ("STATE: +hplip.plugin-error\n", stderr);
 
-			m_DBusComm.sendEvent(EVENT_PRINT_FAILED_MISSING_PLUGIN, "Plugin missing", m_JA.job_id, m_JA.user_name);
+            m_DBusComm.sendEvent(EVENT_PRINT_FAILED_MISSING_PLUGIN, "Plugin missing", m_JA.job_id, m_JA.user_name);
 
         }
         dbglog ("m_Job initialization failed with error = %d", err);
